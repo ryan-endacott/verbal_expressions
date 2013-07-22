@@ -20,12 +20,8 @@ class VerEx < Regexp
   # behaviour to split the "sentences"
   # naturally.
   # TODO: then is reserved in ruby, so use find or think of a better name
-  def find(value = nil, &block)
-    if block_given?
-      value = sanitize(VerEx.new(&block))
-    else
-      value = sanitize(value) if value
-    end
+  def find(value)
+    value = sanitize(value)
     add("(#{value})")
   end
   
