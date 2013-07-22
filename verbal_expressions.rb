@@ -25,6 +25,60 @@ class VerEx < Regexp
     add("(#{value})")
   end
   
+  # start or end of line
+  
+  def start_of_line(enable)
+    @prefixes = '^' if enable
+  end
+        
+  def end_of_line(enable)
+    @suffixes = '$' if enable
+  end
+  
+  # Maybe is used to add values with ?
+  def maybe(value)
+    value = sanitize(value)
+    add("(#{value})?")
+  end
+        
+  # Any character any number of times
+  def anything
+    add("(.*)")
+  end
+
+  # Anything but these characters
+  def anything_but(value)
+    value = sanitize(value)
+    add("([^#{value}]*)")
+  end
+
+  # Regular expression special chars
+  
+  
+  def line_break
+    add("(\\n|(\\r\\n))")
+  end
+  
+  # And a shorthand for html-minded
+  alias_method :br, :line_break
+
+  def tab
+    add("\\t")
+  end
+  
+  # Any alphanumeric
+  def word
+    add("\\w+")
+  end
+  
+  # Any given character
+  def any_of(value)
+    value = sanitize(value)
+    add("[#{value}]")
+  end
+  
+  alias_method :any, :any_of
+  
   private
     
     # Sanitation function for adding
@@ -39,7 +93,9 @@ class VerEx < Regexp
     end
     
     # Function to add stuff to the
-    # expression. 
+    # expression. Also compiles the
+    # new expression so it's ready to
+    # be used.
     def add(value = '')
       @source += value
     end
