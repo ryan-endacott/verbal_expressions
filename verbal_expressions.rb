@@ -20,8 +20,12 @@ class VerEx < Regexp
   # behaviour to split the "sentences"
   # naturally.
   # TODO: then is reserved in ruby, so use find or think of a better name
-  def find(value)
-    value = sanitize(value)
+  def find(value = nil, &block)
+    if block_given?
+      value = sanitize(VerEx.new(&block))
+    else
+      value = sanitize(value) if value
+    end
     add("(#{value})")
   end
   
@@ -89,6 +93,23 @@ class VerEx < Regexp
     end
     value += "]"
     add(value)
+  end
+  
+  # Loops
+  
+  def multiple(value)
+    value = sanitize(value)
+    value += "+" unless ["+", "*"].include?(value.chars.first)
+    add(value)
+  end
+
+  # Adds alternative expressions
+  # TODO: or is a reserved keyword in ruby, think of better name
+  def alternatively(value = nil)
+    @prefixes += "(" unless @prefixes.include?("(")
+    @suffixes = ")" + @suffixes unless @suffixes.include?(")")
+    add(")|(")
+    find(value) if value
   end
   
   private
