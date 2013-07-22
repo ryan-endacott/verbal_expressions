@@ -1,3 +1,8 @@
+# Ruby Verbal Expressions, based on the awesome JavaScript repo by @jehna: https://github.com/jehna/VerbalExpressions
+
+# For documentation and install instructions, 
+# see the main Ruby repo: https://github.com/ryan-endacott/VerbalExpressions.rb
+
 class VerEx < Regexp
     
   def initialize(&block)
