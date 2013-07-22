@@ -27,11 +27,11 @@ class VerEx < Regexp
   
   # start or end of line
   
-  def start_of_line(enable)
+  def start_of_line(enable = true)
     @prefixes = '^' if enable
   end
         
-  def end_of_line(enable)
+  def end_of_line(enable = true)
     @suffixes = '$' if enable
   end
   
@@ -78,6 +78,18 @@ class VerEx < Regexp
   end
   
   alias_method :any, :any_of
+  
+  # Usage: range( from, to [, from, to ... ] )
+  def range(*args)
+    value = "["
+    args.each_slice(2) do |from, to|
+      from = sanitize(from)
+      to = sanitize(to)
+      value += "#{from}-#{to}"
+    end
+    value += "]"
+    add(value)
+  end
   
   private
     
