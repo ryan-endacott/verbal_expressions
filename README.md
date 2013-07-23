@@ -6,7 +6,7 @@ VerbalExpressions is a Ruby library that helps to construct difficult regular ex
 
 ## How to get started
 
-Include the library and you're good to go!
+Just install with `gem install verbal_expressions`, then require the library and you're good to go!
 ```ruby
 require 'verbal_expressions'
 ```
