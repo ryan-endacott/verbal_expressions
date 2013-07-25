@@ -113,6 +113,22 @@ class VerEx < Regexp
     find(value) if value
   end
   
+  
+  # Capture groups (can optionally name)
+  def begin_capture(name = nil)
+    if name
+      add("(?<#{name}>")
+    else
+      add("(")
+    end
+  end
+  
+  def end_capture
+    add(")")
+  end
+    
+      
+  
   private
     
     # Sanitation function for adding
