@@ -11,7 +11,7 @@ describe VerEx do
     end
 
     it 'should correctly build find regex' do
-      matcher.source.should == '(lions)'
+      matcher.source.should == '(?:lions)'
     end
 
     it 'should correctly match find' do
@@ -42,7 +42,7 @@ describe VerEx do
     end
 
     it 'successfully builds regex for matching URLs' do
-      matcher.source.should == '^(http)(s)?(\:\/\/)(www\.)?([^\ ]*)$'
+      matcher.source.should == '^(?:http)(?:s)?(?:://)(?:www\\.)?(?:[^\\ ]*)$'
     end
 
     it 'matches regular http URL' do
