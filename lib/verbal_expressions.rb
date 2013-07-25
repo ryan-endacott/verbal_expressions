@@ -27,7 +27,7 @@ class VerEx < Regexp
   # TODO: then is reserved in ruby, so use find or think of a better name
   def find(value)
     value = sanitize(value)
-    add("(#{value})")
+    add("(?:#{value})")
   end
   
   # start or end of line
@@ -43,25 +43,25 @@ class VerEx < Regexp
   # Maybe is used to add values with ?
   def maybe(value)
     value = sanitize(value)
-    add("(#{value})?")
+    add("(?:#{value})?")
   end
         
   # Any character any number of times
   def anything
-    add("(.*)")
+    add("(?:.*)")
   end
 
   # Anything but these characters
   def anything_but(value)
     value = sanitize(value)
-    add("([^#{value}]*)")
+    add("(?:[^#{value}]*)")
   end
 
   # Regular expression special chars
   
   
   def line_break
-    add("(\\n|(\\r\\n))")
+    add("(?:\\n|(?:\\r\\n))")
   end
   
   # And a shorthand for html-minded
@@ -107,9 +107,9 @@ class VerEx < Regexp
   # Adds alternative expressions
   # TODO: or is a reserved keyword in ruby, think of better name
   def alternatively(value = nil)
-    @prefixes += "(" unless @prefixes.include?("(")
+    @prefixes += "(?:" unless @prefixes.include?("(")
     @suffixes = ")" + @suffixes unless @suffixes.include?(")")
-    add(")|(")
+    add(")|(?:")
     find(value) if value
   end
   
