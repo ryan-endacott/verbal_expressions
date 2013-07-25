@@ -122,7 +122,7 @@ class VerEx < Regexp
       when Regexp, VerEx
         value.source
       else
-        value.gsub(/([^\w])/) { "\\#{$1}" } # Escape non word chars
+        Regexp.quote(value)
       end
     end
     
