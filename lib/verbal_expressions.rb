@@ -61,19 +61,19 @@ class VerEx < Regexp
 
 
   def line_break
-    add("(?:\\n|(?:\\r\\n))")
+    add('(?:\n|(?:\r\n))')
   end
 
   # And a shorthand for html-minded
   alias_method :br, :line_break
 
   def tab
-    add("\\t")
+    add('\t')
   end
 
   # Any alphanumeric
   def word
-    add("\\w+")
+    add('\w+')
   end
 
   # Any given character
