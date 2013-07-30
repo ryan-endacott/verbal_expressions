@@ -1,6 +1,7 @@
-VerbalExpressions.rb v0.1.0
+verbal_expressions
 =====================
-
+[![Build Status](https://travis-ci.org/ryan-endacott/verbal_expressions.png)](https://travis-ci.org/ryan-endacott/verbal_expressions)
+[![Gem Version](https://badge.fury.io/rb/verbal_expressions.png)](http://badge.fury.io/rb/verbal_expressions)
 ## Ruby Regular Expressions made easy
 VerbalExpressions is a Ruby library that helps to construct difficult regular expressions - ported from the awesome JavaScript [VerbalExpressions](https://github.com/jehna/VerbalExpressions).
 
