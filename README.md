@@ -58,7 +58,7 @@ puts result # Outputs "Replace duck with a duck"
 
 ### Regex Capturing
 
-```
+```ruby
 # Grab the number of goals
 
 tester = VerEx.new do
