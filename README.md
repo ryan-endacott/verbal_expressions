@@ -70,6 +70,7 @@ end
 
 match = tester.match('Jerry scored 5 goals!')
 puts match['goals'] # => 5
+```
 
 ## API documentation
 
