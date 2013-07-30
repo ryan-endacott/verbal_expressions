@@ -56,6 +56,21 @@ result = replace_me.gsub( expression, "duck" );
 puts result # Outputs "Replace duck with a duck"
 ```
 
+### Regex Capturing
+
+```
+# Grab the number of goals
+
+tester = VerEx.new do
+  find 'scored '
+  begin_capture 'goals' # Can be named or unnamed
+  word
+  end_capture
+end
+
+match = tester.match('Jerry scored 5 goals!')
+puts match['goals'] # => 5
+
 ## API documentation
 
 I haven't added much documentation to this repo yet, but you can find the documentation for the original JavaScript repo on their [wiki](https://github.com/jehna/VerbalExpressions/wiki).  Most of the methods have been ported as of v0.1.0 of the JavaScript repo.  Just be sure to use the syntax explained above rather than the dot notation :)
@@ -66,7 +81,7 @@ Pull requests are warmly welcomed!
 
 ## Issues
  - I haven't yet ported the modifier code because Ruby Regexp handles modifiers a little differently.
- - Because `or` is reserved in Ruby, `or` is currently aliased to `alternatively`.  Unforunately, `then` is also reserved, so you must use `find` instead.  I'm very open to better name ideas :)
+ - Because `or` is reserved in Ruby, `or` is currently aliased to `alternatively`.  Unfortunately, `then` is also reserved, so you must use `find` instead.  I'm very open to better name ideas :)
 
 ## Thanks!
 Thank you to @jehna for coming up with the awesome original idea!
