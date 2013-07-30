@@ -10,7 +10,7 @@ class VerEx < Regexp
     @source = ""
     @suffixes = ""
     @modifiers = "" # TODO: Ruby Regexp option flags
-    @self_before_instance_eval = eval "self"
+    @self_before_instance_eval = eval "self", block.binding
     instance_eval &block
     super(@prefixes + @source + @suffixes, @modifiers)
   end

@@ -2,6 +2,44 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe VerEx do
 
+  describe '#capture' do
+
+    describe 'by name' do
+
+      let(:matcher) do
+        VerEx.new do
+          find 'scored '
+          begin_capture 'goals'
+          word
+          end_capture
+        end
+      end
+
+      it 'Successfully captures goals by name' do
+        matcher.match('Jerry scored 5 goals!')['goals'].should == '5'
+      end
+
+    end
+
+    describe 'without name' do
+
+      let(:matcher) do
+        VerEx.new do
+          start_of_line
+          begin_capture
+          word
+          end_capture
+        end
+      end
+
+      it 'Successfully captures player by index' do
+        matcher.match('Jerry scored 5 goals!')[1].should == 'Jerry'
+      end
+
+    end
+
+  end
+
   describe '#find' do
 
     let(:matcher) do
