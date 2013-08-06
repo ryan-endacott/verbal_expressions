@@ -91,6 +91,28 @@ describe VerEx do
     end
   end
 
+  describe '#alternatively' do
+
+    describe 'matches a link' do
+
+      let(:matcher) do
+        VerEx.new do
+          find 'http://'
+          alternatively
+          find 'ftp://'
+        end
+      end
+
+      it 'matches ftp://' do
+        matcher.match('ftp://ftp.google.com/').should be_true
+      end
+
+      it 'matches http://' do
+        matcher.match('http://www.google.com').should be_true
+      end
+    end
+  end
+
   describe 'URL Regex Test' do
 
     let(:matcher) do
