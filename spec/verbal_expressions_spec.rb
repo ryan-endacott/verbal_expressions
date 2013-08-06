@@ -23,13 +23,13 @@ describe VerEx do
 
         let(:matcher) do
           VerEx.new do
-            start_of_line
+            find 'scored '
             capture('goals') { word }
           end
         end
 
         it 'Successfully captures player by index' do
-          matcher.match('Jerry scored 5 goals!')['goals'].should == 'Jerry'
+          matcher.match('Jerry scored 5 goals!')['goals'].should == '5'
         end
       end
 
