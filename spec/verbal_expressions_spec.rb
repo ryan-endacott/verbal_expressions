@@ -166,7 +166,39 @@ describe VerEx do
     end
   end
 
+  describe '#line_break' do
 
+    let(:multiline) do
+      %Q{
+        I'm a multiline
+        string.
+      }
+    end
+
+    it 'fails without line break' do
+      matcher = VerEx.new do
+        line_break
+      end
+
+      matcher.match('hello world').should be_false
+    end
+
+    it 'works as line_break' do
+      matcher = VerEx.new do
+        line_break
+      end
+
+      matcher.match(multiline).should be_true
+    end
+
+    it 'works as br' do
+      matcher = VerEx.new do
+        br
+      end
+
+      matcher.match(multiline).should be_true
+    end
+  end
 
   describe 'URL Regex Test' do
 
