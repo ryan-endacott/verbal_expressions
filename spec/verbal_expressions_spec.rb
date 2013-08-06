@@ -200,6 +200,25 @@ describe VerEx do
     end
   end
 
+  describe '#range' do
+
+    it 'works with a range of numbers' do
+      matcher = VerEx.new do
+        range '0', '9'
+      end
+
+      matcher.match('5').should be_true
+    end
+
+    it 'works with a range of letters' do
+      matcher = VerEx.new do
+        range 'A', 'Z'
+      end
+
+      matcher.match('Q').should be_true
+    end
+  end
+
   describe 'URL Regex Test' do
 
     let(:matcher) do
