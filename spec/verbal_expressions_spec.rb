@@ -126,6 +126,20 @@ describe VerEx do
     end
   end
 
+  describe '#any_of' do
+
+    let(:matcher) do
+      VerEx.new do
+        any_of 'aeiou'
+      end
+    end
+
+    it 'finds a vowel' do
+      matcher.match('fox').should be_true
+    end
+  end
+
+
   describe 'URL Regex Test' do
 
     let(:matcher) do
