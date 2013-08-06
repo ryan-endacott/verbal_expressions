@@ -139,6 +139,34 @@ describe VerEx do
     end
   end
 
+  describe '#multiple' do
+
+    it 'matches 1111' do
+      matcher = VerEx.new do
+        multiple '1'
+      end
+
+      matcher.match('111111111').should be_true
+    end
+
+    it 'matches multiple +s' do
+      matcher = VerEx.new do
+        multiple '+'
+      end
+
+      matcher.match('++++').should be_true
+    end
+
+    it 'captures multiple successfully' do
+      matcher = VerEx.new do
+        capture('mult') { multiple '+' }
+      end
+
+      matcher.match('+++++')['mult'].should == '+++++'
+    end
+  end
+
+
 
   describe 'URL Regex Test' do
 
