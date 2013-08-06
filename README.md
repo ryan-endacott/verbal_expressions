@@ -38,7 +38,7 @@ puts 'Hooray!  It works!' if tester.match(test_url)
 puts 'This works too!' if tester =~ test_url
 
 # Print the generated regex:
-puts tester.source # => /^(http)(s)?(\:\/\/)(www\.)?([^\ ]*)$/ 
+puts tester.source # => /^(http)(s)?(\:\/\/)(www\.)?([^\ ]*)$/
 ```
 
 ### Replacing strings
@@ -70,6 +70,13 @@ end
 
 match = tester.match('Jerry scored 5 goals!')
 puts match['goals'] # => 5
+
+# Alternative capture syntax
+
+tester = VerEx.new do
+  find 'scored '
+  capture('goals') { word }
+end
 ```
 
 ## API documentation
@@ -77,7 +84,7 @@ puts match['goals'] # => 5
 I haven't added much documentation to this repo yet, but you can find the documentation for the original JavaScript repo on their [wiki](https://github.com/jehna/VerbalExpressions/wiki).  Most of the methods have been ported as of v0.1.0 of the JavaScript repo.  Just be sure to use the syntax explained above rather than the dot notation :)
 
 ## Contributions
-Clone the repo and fork!  
+Clone the repo and fork!
 Pull requests are warmly welcomed!
 
 ## Issues
