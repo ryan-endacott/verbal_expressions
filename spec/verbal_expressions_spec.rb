@@ -19,6 +19,20 @@ describe VerEx do
         matcher.match('Jerry scored 5 goals!')['goals'].should == '5'
       end
 
+      context 'with a block' do
+
+        let(:matcher) do
+          VerEx.new do
+            start_of_line
+            capture('goals') { word }
+          end
+        end
+
+        it 'Successfully captures player by index' do
+          matcher.match('Jerry scored 5 goals!')['goals'].should == 'Jerry'
+        end
+      end
+
     end
 
     describe 'without name' do
@@ -36,6 +50,18 @@ describe VerEx do
         matcher.match('Jerry scored 5 goals!')[1].should == 'Jerry'
       end
 
+      context 'with a block' do
+        let(:matcher) do
+          VerEx.new do
+            start_of_line
+            capture { word }
+          end
+        end
+
+        it 'Successfully captures player by index' do
+          matcher.match('Jerry scored 5 goals!')[1].should == 'Jerry'
+        end
+      end
     end
 
   end

@@ -127,7 +127,11 @@ class VerEx < Regexp
     add(")")
   end
 
-
+  def capture(name = nil, &block)
+    begin_capture(name)
+    yield
+    end_capture
+  end
 
   private
 
