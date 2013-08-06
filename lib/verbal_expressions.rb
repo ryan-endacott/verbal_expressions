@@ -100,7 +100,7 @@ class VerEx < Regexp
 
   def multiple(value)
     value = sanitize(value)
-    value += "+" unless ["+", "*"].include?(value.chars.first)
+    value += "+"
     add(value)
   end
 
