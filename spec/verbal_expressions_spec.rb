@@ -113,6 +113,19 @@ describe VerEx do
     end
   end
 
+  describe '#anything' do
+
+    let(:matcher) do
+      VerEx.new do
+        anything
+      end
+    end
+
+    it 'matches anything' do
+      matcher.match('The quick brown fox jumps over the lazy dog.').should be_true
+    end
+  end
+
   describe 'URL Regex Test' do
 
     let(:matcher) do
