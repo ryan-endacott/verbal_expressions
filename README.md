@@ -94,3 +94,7 @@ Pull requests are warmly welcomed!
 ## Thanks!
 Thank you to @jehna for coming up with the awesome original idea!
 
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/ryan-endacott/verbal_expressions/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
