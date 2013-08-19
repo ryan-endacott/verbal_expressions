@@ -15,17 +15,6 @@ class VerEx < Regexp
     super(@prefixes + @source + @suffixes, @modifiers)
   end
 
-  def initialize(chain = true)
-    if chain == true
-      @prefixes = ""
-      @source   = ""
-      @suffixes = ""
-
-      @chain = true
-      super("")
-    end
-  end
-
   def method_missing(method, *args, &block)
     @self_before_instance_eval.send method, *args, &block
   end
@@ -40,7 +29,7 @@ class VerEx < Regexp
     value = sanitize(value)
     add("(?:#{value})")
 
-    if @chain == true ;return self;end
+    return self
   end
 
   # start or end of line
@@ -48,13 +37,13 @@ class VerEx < Regexp
   def start_of_line(enable = true)
     @prefixes = '^' if enable
 
-    if @chain == true ;return self;end
+    return self
   end
 
   def end_of_line(enable = true)
     @suffixes = '$' if enable
 
-    if @chain == true ;return self;end
+    return self
   end
 
   # Maybe is used to add values with ?
@@ -62,14 +51,14 @@ class VerEx < Regexp
     value = sanitize(value)
     add("(?:#{value})?")
 
-    if @chain == true ;return self;end
+    return self
   end
 
   # Any character any number of times
   def anything
     add("(?:.*)")
 
-    if @chain == true ;return self;end
+    return self
   end
 
   # Anything but these characters
@@ -77,7 +66,7 @@ class VerEx < Regexp
     value = sanitize(value)
     add("(?:[^#{value}]*)")
 
-    if @chain == true ;return self;end
+    return self
   end
 
   # Regular expression special chars
@@ -86,7 +75,7 @@ class VerEx < Regexp
   def line_break
     add('(?:\n|(?:\r\n))')
 
-    if @chain == true ;return self;end
+    return self
   end
 
   # And a shorthand for html-minded
@@ -95,35 +84,35 @@ class VerEx < Regexp
   def tab
     add('\t')
 
-    if @chain == true ;return self;end
+    return self
   end
 
   # Any alphanumeric
   def word
     add('\w+')
 
-    if @chain == true ;return self;end
+    return self
   end
 
   # Any single digit
   def digit
-  add('\d')
+    add('\d')
 
-  if @chain == true ;return self;end
+    return self
   end
 
   # Any integer (multiple digits)
   def integer
     one_or_more { digit }
 
-    if @chain == true ;return self;end
+    return self
   end
 
   # Any whitespace character
   def whitespace()
     add('\s+')
 
-    if @chain == true ;return self;end
+    return self
   end
 
   # Any given character
@@ -131,20 +120,20 @@ class VerEx < Regexp
     value = sanitize(value)
     add("[#{value}]")
 
-    if @chain == true ;return self;end
+    return self
   end
 
   #At least one of some other thing
   def one_or_more(&b)
-  add("(?:")
-  yield
-  add(")+")
+    add("(?:")
+    yield
+    add(")+")
   end
 
   def zero_or_more(&b)
-  add("(?:")
-  yield
-  add(")*")
+    add("(?:")
+    yield
+    add(")*")
   end
 
   alias_method :any, :any_of
@@ -160,7 +149,7 @@ class VerEx < Regexp
     value += "]"
     add(value)
 
-    if @chain == true ;return self;end
+    return self
   end
 
   # Loops
@@ -170,7 +159,7 @@ class VerEx < Regexp
     value += "+"
     add(value)
 
-    if @chain == true ;return self;end
+    return self
   end
 
   # Adds alternative expressions
@@ -190,23 +179,19 @@ class VerEx < Regexp
       add("(")
     end
 
-    if @chain == true ;return self;end
+    return self
   end
 
   def end_capture
     add(")")
 
-    if @chain == true ;return self;end
+    return self
   end
 
   def capture(name = nil, &block)
     begin_capture(name)
     yield
     end_capture
-  end
-
-  def end_expression
-    return Regexp.new(@prefixes + @source + @suffixes)
   end
 
   private
@@ -231,3 +216,19 @@ class VerEx < Regexp
     end
 
 end
+
+class VerExChain < VerEx
+  def initialize
+    @prefixes  = ""
+    @source    = ""
+    @suffixes  = ""
+    @modifiers = "" 
+  end
+
+  def end
+    return Regexp.new(@prefixes + @source + @suffixes)
+  end
+end
+
+# Usage of VerExChain
+# 
