@@ -219,6 +219,59 @@ describe VerEx do
     end
   end
 
+  describe '#one_or_more' do
+    it 'works with one word' do
+	  matcher = VerEx.new do
+		  one_or_more{ word }
+	  end
+
+	  matcher.match('hello').should be_true
+	end
+
+    it 'works with multiple words separated with whitespace' do
+	  matcher = VerEx.new do
+		  one_or_more{ 
+			  word 
+			  zero_or_more{ whitespace }
+		  }
+	  end
+
+	  matcher.match('this is sparta')[0].should == "this is sparta"
+	end
+
+    it 'works with multiple words separated with whitespace' do
+	  matcher = VerEx.new do
+		  one_or_more{ 
+			  word 
+			  zero_or_more{ whitespace }
+		  }
+	  end
+
+	  matcher.match('111 333 777')[0].should == "111 333 777"
+	end
+  end
+
+  describe '#zero_or_more' do
+	it 'works with zero things' do
+	  matcher = VerEx.new do
+		  zero_or_more{ 
+			  word 
+		  }
+	  end
+	  matcher.match('<><>').should be_true 
+	end
+
+	it 'works with multiple things' do
+	  matcher = VerEx.new do
+		  zero_or_more{ 
+			  word 
+			  zero_or_more{ whitespace }
+		  }
+	  end
+	  matcher.match('eye of the tiger')[0].should == "eye of the tiger" 
+	end
+  end
+
   describe 'URL Regex Test' do
 
     let(:matcher) do
