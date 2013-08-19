@@ -76,10 +76,38 @@ class VerEx < Regexp
     add('\w+')
   end
 
+  # Any single digit
+  def digit
+	add('\d')
+  end
+
+  # Any integer (multiple digits)
+  def integer
+    one_or_more { digit }
+  end
+
+  # Any whitespace character
+  def whitespace()
+    add('\s+')
+  end
+
   # Any given character
   def any_of(value)
     value = sanitize(value)
     add("[#{value}]")
+  end
+
+  #At least one of some other thing
+  def one_or_more(&b)
+	add("(?:")
+	yield
+	add(")+")
+  end
+
+  def zero_or_more(&b)
+	add("(?:")
+	yield
+	add(")*")
   end
 
   alias_method :any, :any_of
@@ -112,7 +140,6 @@ class VerEx < Regexp
     add(")|(?:")
     find(value) if value
   end
-
 
   # Capture groups (can optionally name)
   def begin_capture(name = nil)
