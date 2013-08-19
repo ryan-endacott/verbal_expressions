@@ -73,22 +73,22 @@ class VerEx < Regexp
 
   # Any alphanumeric
   def word
-    add("\\w+")
+    add('\w+')
   end
 
   # Any single digit
   def digit
-	add("\\d")
+	add('\d')
   end
 
-  # Any number (multiple digits)
-  def number
+  # Any integer (multiple digits)
+  def integer
     one_or_more { digit }
   end
 
   # Any whitespace character
   def whitespace()
-    add("\\s+")
+    add('\s+')
   end
 
   # Any given character
@@ -99,13 +99,13 @@ class VerEx < Regexp
 
   #At least one of some other thing
   def one_or_more(&b)
-	add("(")
+	add("(?:")
 	yield
 	add(")+")
   end
 
   def zero_or_more(&b)
-	add("(")
+	add("(?:")
 	yield
 	add(")*")
   end
