@@ -168,7 +168,12 @@ class VerEx < Regexp
     @prefixes += "(?:" unless @prefixes.include?("(")
     @suffixes = ")" + @suffixes unless @suffixes.include?(")")
     add(")|(?:")
-    find(value) if value
+    if value != nil
+      value = sanitize(value)
+      add("(?:#{value})")
+    end
+
+    return self
   end
 
   # Capture groups (can optionally name)
@@ -225,10 +230,54 @@ class VerExChain < VerEx
     @modifiers = "" 
   end
 
+  alias_method :or  ,:alternatively
+  alias_method :then,:find
   def end
     return Regexp.new(@prefixes + @source + @suffixes)
   end
+
+  def end_of_line
+    super
+    return Regexp.new(@prefixes + @source + @suffixes)
+  end
+
 end
 
 # Usage of VerExChain
-# 
+# -------------------
+# Always use .end() at end of expression chain. 
+# If there is an end_of_line() at the end of expression,
+# then there is no need for calling end.
+# And also - or() and then() are available in VerExChain.
+
+# v = VerExChain.new
+#   .start_of_line
+#   .find('http')
+#   .maybe('s')
+#   .then('://')
+#   .maybe('www.')
+#   .anything_but(' ')
+#   .end_of_line
+# puts "Works." if v =~ "http://google.com/"
+# puts v.source
+
+# expression = VerExChain.new
+#                 .find( "http" )
+#                 .maybe( "s" )
+#                 .then( "://" )
+#                 .or()
+#                 .then( "ftp://" )
+#                 .end()
+# puts "Works. 2" if expression =~ "ftp://"
+# puts "Works. 3" if expression =~ "http://"
+
+
+
+# replace_me = "Replace bird with a duck"
+# Create an expression that seeks for word "bird"
+# expression = VerExChain.new.find('bird').end
+
+# Execute the expression like a normal Regexp object
+# result = replace_me.gsub( expression, "duck" );
+
+# puts result # Outputs "Replace duck with a duck"
