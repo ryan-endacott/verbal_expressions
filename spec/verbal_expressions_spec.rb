@@ -164,6 +164,47 @@ describe VerEx do
 
       matcher.match('+++++')['mult'].should == '+++++'
     end
+
+    it 'does not match string with less than/equal to min occurrence of value ' do
+      matcher = VerEx.new do
+        start_of_line
+        multiple("1",5)
+        end_of_line
+      end
+
+      matcher.match("1").should be_false
+    end
+
+    it 'matches string with occurence greater than equal to min' do
+      matcher = VerEx.new do
+        start_of_line
+        multiple("1",2)
+        end_of_line
+      end
+
+      matcher.match("111").should be_true
+    end
+
+    it 'matches string with occurence greater than equal to min and less than equal to max' do
+      matcher = VerEx.new do
+        start_of_line
+        multiple("1",2,5)
+        end_of_line
+      end
+
+      matcher.match("111").should be_true
+    end
+
+    it 'does not match with occurence greater than max' do
+      matcher = VerEx.new do
+        start_of_line
+        multiple("1",2,5)
+        end_of_line
+      end
+
+      matcher.match("111111").should be_false
+    end
+
   end
 
   describe '#line_break' do
@@ -310,4 +351,116 @@ describe VerEx do
       matcher.match('htp://google.com').should be_false
     end
   end
+end
+
+
+describe VerExChain do
+
+  describe '#or' do
+    describe 'matches a link' do
+      let(:matcher) do
+        VerExChain.new
+          .find('http://')
+          .or
+          .find('ftp://')
+          .end
+      end
+
+      it 'matches ftp://' do
+        matcher.match('ftp://ftp.google.com/').should be_true
+      end
+
+      it 'matches http://' do
+        matcher.match('http://www.google.com').should be_true
+      end
+    end
+  end
+
+  describe '#find' do
+
+    let(:matcher) do
+      VerExChain.new
+        .find('lions')
+        .end
+    end
+
+    it 'should correctly build find regex' do
+      matcher.source.should == '(?:lions)'
+    end
+
+    it 'should correctly match find' do
+      matcher.match('lions').should be_true
+    end
+
+    it 'should match part of a string with find' do
+      matcher.match('lions, tigers, and bears, oh my!').should be_true
+    end
+
+    it 'should only match the `find` part of a string' do
+      matcher.match('lions, tigers, and bears, oh my!')[0].should == 'lions'
+    end
+  end
+
+  describe 'URL Regex Test' do
+    let(:matcher) do
+      VerExChain.new
+        .start_of_line
+        .find('http')
+        .maybe('s')
+        .then('://')
+        .maybe('www.')
+        .anything_but(' ')
+        .end_of_line
+    end
+
+    it 'matches https://google.com' do
+      matcher.match("https://google.com").should be_true
+    end
+
+    it 'does not match htp://' do
+      matcher.match("htp://google.com").should be_false
+    end
+
+    it 'successfully builds regex for matching URLs' do
+      matcher.source.should == '^(?:http)(?:s)?(?:://)(?:www\\.)?(?:[^\\ ]*)$'
+    end
+
+    it 'matches https URL' do
+      matcher.match('https://google.com').should be_true
+    end
+
+    it 'matches a URL with www' do
+      matcher.match('https://www.google.com').should be_true
+    end
+
+    it 'fails to match when URL has a space' do
+      matcher.match('http://goo gle.com').should be_false
+    end
+  end
+
+  describe '#find' do
+
+    let(:matcher) do
+      VerExChain.new
+        .find('lions') 
+        .end
+    end
+
+    it 'should correctly build find regex' do
+      matcher.source.should == '(?:lions)'
+    end
+
+    it 'should correctly match find' do
+      matcher.match('lions').should be_true
+    end
+
+    it 'should match part of a string with find' do
+      matcher.match('lions, tigers, and bears, oh my!').should be_true
+    end
+
+    it 'should only match the `find` part of a string' do
+      matcher.match('lions, tigers, and bears, oh my!')[0].should == 'lions'
+    end
+  end
+
 end
