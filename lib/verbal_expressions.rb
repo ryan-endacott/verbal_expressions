@@ -154,9 +154,15 @@ class VerEx < Regexp
 
   # Loops
 
-  def multiple(value)
-    value = sanitize(value)
-    value += "+"
+  def multiple(value,min=nil,max=nil)
+    value = "(" + sanitize(value) + ")"
+    if min != nil and max != nil 
+      value += "{#{min},#{max}}"
+    elsif min != nil and max == nil
+      value += "{#{min},}"
+    else
+      value += "+"
+    end
     add(value)
 
     return self
@@ -281,3 +287,13 @@ end
 # result = replace_me.gsub( expression, "duck" );
 
 # puts result # Outputs "Replace duck with a duck"
+
+
+# multiple() tests - 
+# v = VerEx.new do
+#    start_of_line
+#    multiple("1",2,5)
+#    end_of_line
+#  end
+# puts "Match" if v =~ "11111"
+# puts v.source

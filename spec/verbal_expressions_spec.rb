@@ -164,6 +164,47 @@ describe VerEx do
 
       matcher.match('+++++')['mult'].should == '+++++'
     end
+
+    it 'does not match string with less than/equal to min occurrence of value ' do
+      matcher = VerEx.new do
+        start_of_line
+        multiple("1",5)
+        end_of_line
+      end
+
+      matcher.match("1").should be_false
+    end
+
+    it 'matches string with occurence greater than equal to min' do
+      matcher = VerEx.new do
+        start_of_line
+        multiple("1",2)
+        end_of_line
+      end
+
+      matcher.match("111").should be_true
+    end
+
+    it 'matches string with occurence greater than equal to min and less than equal to max' do
+      matcher = VerEx.new do
+        start_of_line
+        multiple("1",2,5)
+        end_of_line
+      end
+
+      matcher.match("111").should be_true
+    end
+
+    it 'does not match with occurence greater than max' do
+      matcher = VerEx.new do
+        start_of_line
+        multiple("1",2,5)
+        end_of_line
+      end
+
+      matcher.match("111111").should be_false
+    end
+
   end
 
   describe '#line_break' do
