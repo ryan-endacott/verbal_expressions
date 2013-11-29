@@ -78,7 +78,7 @@ class VerEx < Regexp
 
   # Any single digit
   def digit
-	add('\d')
+    add('\d')
   end
 
   # Any integer (multiple digits)
@@ -99,15 +99,15 @@ class VerEx < Regexp
 
   #At least one of some other thing
   def one_or_more(&b)
-	add("(?:")
-	yield
-	add(")+")
+    add("(?:")
+    yield
+    add(")+")
   end
 
   def zero_or_more(&b)
-	add("(?:")
-	yield
-	add(")*")
+    add("(?:")
+    yield
+    add(")*")
   end
 
   alias_method :any, :any_of
