@@ -324,7 +324,7 @@ describe VerEx do
     it 'fails with a non-alphanumeric' do
       matcher = VerEx.ew do
         start_of_line
-        letter
+        word
         end_of_line
       end
       matcher.match('!').should be_false
@@ -335,7 +335,7 @@ describe VerEx do
     it 'works with multiple alphanumerics' do
       matcher = VerEx.new do
         start_of_line
-        letter
+        word
         end_of_line
       end
       matcher.match('abc').should be_true
