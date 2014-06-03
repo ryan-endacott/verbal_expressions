@@ -287,7 +287,7 @@ describe VerEx do
     end
     
     it 'fails with a non-alphanumeric' do
-      matcher = VerEx.ew do
+      matcher = VerEx.new do
         start_of_line
         letter
         end_of_line
@@ -322,7 +322,7 @@ describe VerEx do
     end
     
     it 'fails with a non-alphanumeric' do
-      matcher = VerEx.ew do
+      matcher = VerEx.new do
         start_of_line
         word
         end_of_line
