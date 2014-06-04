@@ -71,9 +71,14 @@ class VerEx < Regexp
     add('\t')
   end
 
-  # Any alphanumeric
+  # Any single alphanumeric
+  def letter
+    add('\w')
+  end
+
+  # Any word (multiple alphanumerics)
   def word
-    add('\w+')
+    one_or_more { letter }
   end
 
   # Any single digit

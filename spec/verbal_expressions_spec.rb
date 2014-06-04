@@ -271,6 +271,76 @@ describe VerEx do
 	  matcher.match('eye of the tiger')[0].should == "eye of the tiger" 
 	end
   end
+  
+  describe '#letter' do
+
+    it 'works with a single alphanumeric' do
+      matcher = VerEx.new do
+        start_of_line
+        letter
+        end_of_line
+      end
+      matcher.match('a').should be_true
+      matcher.match('A').should be_true
+      matcher.match('0').should be_true
+      matcher.match('_').should be_true
+    end
+    
+    it 'fails with a non-alphanumeric' do
+      matcher = VerEx.new do
+        start_of_line
+        letter
+        end_of_line
+      end
+      matcher.match('!').should be_false
+      matcher.match('/').should be_false
+      matcher.match('(').should be_false
+    end
+    
+    it 'fails with multiple alphanumerics' do
+      matcher = VerEx.new do
+        start_of_line
+        letter
+        end_of_line
+      end
+      matcher.match('abc').should be_false
+    end
+  end
+  
+    describe '#word' do
+
+    it 'works with a single alphanumeric' do
+      matcher = VerEx.new do
+        start_of_line
+        word
+        end_of_line
+      end
+      matcher.match('a').should be_true
+      matcher.match('A').should be_true
+      matcher.match('0').should be_true
+      matcher.match('_').should be_true
+    end
+    
+    it 'fails with a non-alphanumeric' do
+      matcher = VerEx.new do
+        start_of_line
+        word
+        end_of_line
+      end
+      matcher.match('!').should be_false
+      matcher.match('/').should be_false
+      matcher.match('(').should be_false
+    end
+    
+    it 'works with multiple alphanumerics' do
+      matcher = VerEx.new do
+        start_of_line
+        word
+        end_of_line
+      end
+      matcher.match('abc').should be_true
+    end
+  end
 
   describe 'URL Regex Test' do
 
