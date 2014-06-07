@@ -342,7 +342,7 @@ describe VerEx do
     end
   end
 
-  describe '#start of line' do
+  describe '#start_of_line' do
 
     it 'works with single line' do
       let(:matcher) do
@@ -368,7 +368,7 @@ describe VerEx do
     end
   end
 
-  describe '#end of line' do
+  describe '#end_of_line' do
 
     it 'works with single line' do
       let(:matcher) do
@@ -392,6 +392,34 @@ describe VerEx do
       matcher.match('xxx\nxxxabc').should be_true
       matcher.match('xxx\nxxabcx').should be_false
     end
+  end
+  
+  describe '#start_of_string' do
+
+    let(:matcher) do
+      VerEx.new do
+        start_of_string
+        find 'abc'
+      end
+    end
+    matcher.match('abcdefg').should be_true
+    matcher.match('xxxabc').should be_false
+    matcher.match('abcdefg\nxxx').should be_true
+    matcher.match('xxx\nabcdefg').should be_false
+  end
+
+  describe '#end_of_string' do
+
+    let(:matcher) do
+      VerEx.new do
+        find 'abc'
+        end_of_string
+      end
+    end
+    matcher.match('xxxabc').should be_true
+    matcher.match('abcxxx').should be_false
+    matcher.match('xxxabc\nxxx').should be_false
+    matcher.match('xxx\nxxxabc').should be_true
   end
 
   describe 'URL Regex Test' do

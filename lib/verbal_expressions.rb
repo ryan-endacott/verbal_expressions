@@ -40,6 +40,16 @@ class VerEx < Regexp
     add('$')
   end
 
+  # start and end of string
+
+  def start_of_string
+    add('\A')
+  end
+
+  def end_of_string
+    add ('\z')
+  end
+
   # Maybe is used to add values with ?
   def maybe(value)
     value = sanitize(value)
