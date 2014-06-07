@@ -102,8 +102,15 @@ class VerEx < Regexp
   end
 
   # Any whitespace character
-  def whitespace()
+  def whitespace
     add('\s+')
+  end
+
+  # Any hexadecimal character
+  def hex
+    # \h is not defined in ruby 1.8.7, so avoid it
+    # for compatability issues
+    add('[a-fA-F0-9]')
   end
 
   # Any given character

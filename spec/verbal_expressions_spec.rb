@@ -422,6 +422,20 @@ describe VerEx do
     matcher.match('xxx\nxxxabc').should be_true
   end
 
+  describe '#hex' do
+
+    let(:matcher) do
+      VerEx.new do
+        start_of_string
+        one_or_more { hex }
+        end_of_string
+      end
+    end
+    matcher.match('123abc').should be_true
+    matcher.match('FFFFFF').should be_true
+    matcher.match('abcdefg').should be_false
+  end
+
   describe 'URL Regex Test' do
 
     let(:matcher) do
