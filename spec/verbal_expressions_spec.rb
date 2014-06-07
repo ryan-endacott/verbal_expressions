@@ -306,8 +306,8 @@ describe VerEx do
       matcher.match('abc').should be_false
     end
   end
-  
-    describe '#word' do
+
+  describe '#word' do
 
     it 'works with a single alphanumeric' do
       matcher = VerEx.new do
@@ -320,7 +320,7 @@ describe VerEx do
       matcher.match('0').should be_true
       matcher.match('_').should be_true
     end
-    
+
     it 'fails with a non-alphanumeric' do
       matcher = VerEx.new do
         start_of_line
@@ -331,7 +331,7 @@ describe VerEx do
       matcher.match('/').should be_false
       matcher.match('(').should be_false
     end
-    
+
     it 'works with multiple alphanumerics' do
       matcher = VerEx.new do
         start_of_line
@@ -339,6 +339,58 @@ describe VerEx do
         end_of_line
       end
       matcher.match('abc').should be_true
+    end
+  end
+
+  describe '#start of line' do
+
+    it 'works with single line' do
+      let(:matcher) do
+        VerEx.new do
+          start_of_line
+          find 'abc'
+        end
+      end
+      matcher.match('abcdefg').should be_true
+      matcher.match('xxxabc').should be_false
+    end
+
+    it 'works with multiple lines' do
+      let(:matcher) do
+        VerEx.new do
+          start_of_line
+          find 'abc'
+        end
+      end
+      matcher.match('abcdefg\nxxx').should be_true
+      matcher.match('xxx\nabcdefg').should be_true
+      matcher.match('xxx\nxxxabc').should be_false
+    end
+  end
+
+  describe '#end of line' do
+
+    it 'works with single line' do
+      let(:matcher) do
+        VerEx.new do
+          find 'abc'
+          end_of_line
+        end
+      end
+      matcher.match('xxxabc').should be_true
+      matcher.match('abcxxx').should be_false
+    end
+
+    it 'works with multiple lines' do
+      let(:matcher) do
+        VerEx.new do
+          find 'abc'
+          end_of_line
+        end
+      end
+      matcher.match('xxxabc\nxxx').should be_true
+      matcher.match('xxx\nxxxabc').should be_true
+      matcher.match('xxx\nxxabcx').should be_false
     end
   end
 

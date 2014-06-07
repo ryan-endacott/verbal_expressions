@@ -32,12 +32,12 @@ class VerEx < Regexp
 
   # start or end of line
 
-  def start_of_line(enable = true)
-    @prefixes = '^' if enable
+  def start_of_line
+    add('^')
   end
 
-  def end_of_line(enable = true)
-    @suffixes = '$' if enable
+  def end_of_line
+    add('$')
   end
 
   # Maybe is used to add values with ?
