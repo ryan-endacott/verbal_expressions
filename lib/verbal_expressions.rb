@@ -5,14 +5,16 @@
 
 class VerEx < Regexp
 
-  def initialize(&block)
+  def initialize(*args, &block)
     @prefixes = ""
     @source = ""
     @suffixes = ""
-    @modifiers = "" # TODO: Ruby Regexp option flags
+    modifiers = 0
+    modifiers |= Regexp::IGNORECASE if args.include? :ignorecase
+    modifiers |= Regexp::MULTILINE if args.include? :multiline
     @self_before_instance_eval = eval "self", block.binding
     instance_eval &block
-    super(@prefixes + @source + @suffixes, @modifiers)
+    super(@prefixes + @source + @suffixes, modifiers)
   end
 
   def method_missing(method, *args, &block)

@@ -448,4 +448,52 @@ describe VerEx do
       matcher.match('htp://google.com').should be_false
     end
   end
+
+  describe 'modifiers' do
+    # I.e. Case insensitive, or multiline regex
+
+    it 'uses no modifiers by default' do
+      matcher = VerEx.new do
+        find "a"
+        anything
+        find "b"
+      end
+      matcher.match("axxxb").should be_true
+      matcher.match("AxxxB").should be_false
+      matcher.match("a\nb").should be_false
+    end
+
+    it 'works with ignorecase' do
+      matcher = VerEx.new(:ignorecase) do
+        find "a"
+        anything
+        find "b"
+      end
+      matcher.match("axxxb").should be_true
+      matcher.match("AxxxB").should be_true
+      matcher.match("a\nb").should be_false
+    end
+
+    it 'works with multiline' do
+      matcher = VerEx.new(:multiline) do
+        find "a"
+        anything
+        find "b"
+      end
+      matcher.match("axxxb").should be_true
+      matcher.match("AxxxB").should be_false
+      matcher.match("a\nb").should be_true
+    end
+
+    it 'works with ignorecase and multiline' do
+      matcher = VerEx.new(:ignorecase, :multiline) do
+        find "a"
+        anything
+        find "b"
+      end
+      matcher.match("axxxb").should be_true
+      matcher.match("AxxxB").should be_true
+      matcher.match("a\nb").should be_true
+    end
+  end
 end
