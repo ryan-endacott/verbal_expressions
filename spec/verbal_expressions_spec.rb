@@ -274,12 +274,14 @@ describe VerEx do
   
   describe '#letter' do
 
-    it 'works with a single alphanumeric' do
-      matcher = VerEx.new do
+    let(:matcher) do
+      VerEx.new do
         start_of_line
         letter
         end_of_line
       end
+    end
+    it 'works with a single alphanumeric' do
       matcher.match('a').should be_true
       matcher.match('A').should be_true
       matcher.match('0').should be_true
@@ -287,34 +289,26 @@ describe VerEx do
     end
     
     it 'fails with a non-alphanumeric' do
-      matcher = VerEx.new do
-        start_of_line
-        letter
-        end_of_line
-      end
       matcher.match('!').should be_false
       matcher.match('/').should be_false
       matcher.match('(').should be_false
     end
     
     it 'fails with multiple alphanumerics' do
-      matcher = VerEx.new do
-        start_of_line
-        letter
-        end_of_line
-      end
       matcher.match('abc').should be_false
     end
   end
 
   describe '#word' do
 
-    it 'works with a single alphanumeric' do
-      matcher = VerEx.new do
+    let(:matcher) do
+      VerEx.new do
         start_of_line
         word
         end_of_line
       end
+    end
+    it 'works with a single alphanumeric' do
       matcher.match('a').should be_true
       matcher.match('A').should be_true
       matcher.match('0').should be_true
@@ -322,118 +316,98 @@ describe VerEx do
     end
 
     it 'fails with a non-alphanumeric' do
-      matcher = VerEx.new do
-        start_of_line
-        word
-        end_of_line
-      end
       matcher.match('!').should be_false
       matcher.match('/').should be_false
       matcher.match('(').should be_false
     end
 
     it 'works with multiple alphanumerics' do
-      matcher = VerEx.new do
-        start_of_line
-        word
-        end_of_line
-      end
       matcher.match('abc').should be_true
     end
   end
 
   describe '#start_of_line' do
 
-    it 'works with single line' do
-      let(:matcher) do
-        VerEx.new do
-          start_of_line
-          find 'abc'
-        end
+    let(:matcher) do
+      VerEx.new do
+        start_of_line
+        find 'abc'
       end
+    end
+
+    it 'works with single line' do
       matcher.match('abcdefg').should be_true
       matcher.match('xxxabc').should be_false
     end
 
     it 'works with multiple lines' do
-      let(:matcher) do
-        VerEx.new do
-          start_of_line
-          find 'abc'
-        end
-      end
-      matcher.match('abcdefg\nxxx').should be_true
-      matcher.match('xxx\nabcdefg').should be_true
-      matcher.match('xxx\nxxxabc').should be_false
+      matcher.match("abcdefg\nxxx").should be_true
+      matcher.match("xxx\nabcdefg").should be_true
+      matcher.match("xxx\nxxxabc").should be_false
     end
   end
 
   describe '#end_of_line' do
 
-    it 'works with single line' do
-      let(:matcher) do
-        VerEx.new do
-          find 'abc'
-          end_of_line
-        end
+    let(:matcher) do
+      VerEx.new do
+        find 'abc'
+        end_of_line
       end
+    end
+
+    it 'works with single line' do
       matcher.match('xxxabc').should be_true
       matcher.match('abcxxx').should be_false
     end
 
     it 'works with multiple lines' do
-      let(:matcher) do
-        VerEx.new do
-          find 'abc'
-          end_of_line
-        end
-      end
-      matcher.match('xxxabc\nxxx').should be_true
-      matcher.match('xxx\nxxxabc').should be_true
-      matcher.match('xxx\nxxabcx').should be_false
+      matcher.match("xxxabc\nxxx").should be_true
+      matcher.match("xxx\nxxxabc").should be_true
+      matcher.match("xxx\nxxabcx").should be_false
     end
   end
   
   describe '#start_of_string' do
 
-    let(:matcher) do
-      VerEx.new do
+    it 'matches end of string'do
+      matcher = VerEx.new do
         start_of_string
         find 'abc'
       end
+      matcher.match('abcdefg').should be_true
+      matcher.match('xxxabc').should be_false
+      matcher.match("abcdefg\nxxx").should be_true
+      matcher.match("xxx\nabcdefg").should be_false
     end
-    matcher.match('abcdefg').should be_true
-    matcher.match('xxxabc').should be_false
-    matcher.match('abcdefg\nxxx').should be_true
-    matcher.match('xxx\nabcdefg').should be_false
   end
 
   describe '#end_of_string' do
 
-    let(:matcher) do
-      VerEx.new do
+    it 'matches end of string' do
+      matcher = VerEx.new do
         find 'abc'
         end_of_string
       end
+      matcher.match('xxxabc').should be_true
+      matcher.match('abcxxx').should be_false
+      matcher.match("xxxabc\nxxx").should be_false
+      matcher.match("xxx\nxxxabc").should be_true
     end
-    matcher.match('xxxabc').should be_true
-    matcher.match('abcxxx').should be_false
-    matcher.match('xxxabc\nxxx').should be_false
-    matcher.match('xxx\nxxxabc').should be_true
   end
 
   describe '#hex' do
 
-    let(:matcher) do
-      VerEx.new do
+    it 'matches a-f, A-F and 0-9' do
+      matcher = VerEx.new do
         start_of_string
         one_or_more { hex }
         end_of_string
       end
+      matcher.match('123abc').should be_true
+      matcher.match('FFFFFF').should be_true
+      matcher.match('abcdefg').should be_false
     end
-    matcher.match('123abc').should be_true
-    matcher.match('FFFFFF').should be_true
-    matcher.match('abcdefg').should be_false
   end
 
   describe 'URL Regex Test' do
