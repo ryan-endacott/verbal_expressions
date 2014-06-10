@@ -5,14 +5,23 @@
 
 class VerEx < Regexp
 
-  def initialize(&block)
+  def initialize(*args, &block)
     @prefixes = ""
-    @source = ""
     @suffixes = ""
-    @modifiers = "" # TODO: Ruby Regexp option flags
+    if args.include? :whole_string
+      @prefixes << '\A'
+      @suffixes << '\z'
+    elsif args.include? :whole_line
+      @prefixes << '^'
+      @suffixes << '$'
+    end
+    modifiers = 0
+    modifiers |= Regexp::IGNORECASE if args.include? :ignorecase
+    modifiers |= Regexp::MULTILINE if args.include? :multiline
+    @source = ""
     @self_before_instance_eval = eval "self", block.binding
     instance_eval &block
-    super(@prefixes + @source + @suffixes, @modifiers)
+    super(@prefixes + @source + @suffixes, modifiers)
   end
 
   def method_missing(method, *args, &block)
@@ -32,12 +41,22 @@ class VerEx < Regexp
 
   # start or end of line
 
-  def start_of_line(enable = true)
-    @prefixes = '^' if enable
+  def start_of_line
+    add('^')
   end
 
-  def end_of_line(enable = true)
-    @suffixes = '$' if enable
+  def end_of_line
+    add('$')
+  end
+
+  # start and end of string
+
+  def start_of_string
+    add('\A')
+  end
+
+  def end_of_string
+    add ('\z')
   end
 
   # Maybe is used to add values with ?
@@ -92,8 +111,15 @@ class VerEx < Regexp
   end
 
   # Any whitespace character
-  def whitespace()
+  def whitespace
     add('\s+')
+  end
+
+  # Any hexadecimal character
+  def hex
+    # \h is not defined in ruby 1.8.7, so avoid it
+    # for compatability issues
+    add('[a-fA-F0-9]')
   end
 
   # Any given character

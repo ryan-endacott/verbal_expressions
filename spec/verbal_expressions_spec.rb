@@ -274,12 +274,14 @@ describe VerEx do
   
   describe '#letter' do
 
-    it 'works with a single alphanumeric' do
-      matcher = VerEx.new do
+    let(:matcher) do
+      VerEx.new do
         start_of_line
         letter
         end_of_line
       end
+    end
+    it 'works with a single alphanumeric' do
       matcher.match('a').should be_true
       matcher.match('A').should be_true
       matcher.match('0').should be_true
@@ -287,58 +289,124 @@ describe VerEx do
     end
     
     it 'fails with a non-alphanumeric' do
-      matcher = VerEx.new do
-        start_of_line
-        letter
-        end_of_line
-      end
       matcher.match('!').should be_false
       matcher.match('/').should be_false
       matcher.match('(').should be_false
     end
     
     it 'fails with multiple alphanumerics' do
-      matcher = VerEx.new do
-        start_of_line
-        letter
-        end_of_line
-      end
       matcher.match('abc').should be_false
     end
   end
-  
-    describe '#word' do
 
-    it 'works with a single alphanumeric' do
-      matcher = VerEx.new do
+  describe '#word' do
+
+    let(:matcher) do
+      VerEx.new do
         start_of_line
         word
         end_of_line
       end
+    end
+    it 'works with a single alphanumeric' do
       matcher.match('a').should be_true
       matcher.match('A').should be_true
       matcher.match('0').should be_true
       matcher.match('_').should be_true
     end
-    
+
     it 'fails with a non-alphanumeric' do
-      matcher = VerEx.new do
-        start_of_line
-        word
-        end_of_line
-      end
       matcher.match('!').should be_false
       matcher.match('/').should be_false
       matcher.match('(').should be_false
     end
-    
+
     it 'works with multiple alphanumerics' do
-      matcher = VerEx.new do
+      matcher.match('abc').should be_true
+    end
+  end
+
+  describe '#start_of_line' do
+
+    let(:matcher) do
+      VerEx.new do
         start_of_line
-        word
+        find 'abc'
+      end
+    end
+
+    it 'works with single line' do
+      matcher.match('abcdefg').should be_true
+      matcher.match('xxxabc').should be_false
+    end
+
+    it 'works with multiple lines' do
+      matcher.match("abcdefg\nxxx").should be_true
+      matcher.match("xxx\nabcdefg").should be_true
+      matcher.match("xxx\nxxxabc").should be_false
+    end
+  end
+
+  describe '#end_of_line' do
+
+    let(:matcher) do
+      VerEx.new do
+        find 'abc'
         end_of_line
       end
-      matcher.match('abc').should be_true
+    end
+
+    it 'works with single line' do
+      matcher.match('xxxabc').should be_true
+      matcher.match('abcxxx').should be_false
+    end
+
+    it 'works with multiple lines' do
+      matcher.match("xxxabc\nxxx").should be_true
+      matcher.match("xxx\nxxxabc").should be_true
+      matcher.match("xxx\nxxabcx").should be_false
+    end
+  end
+  
+  describe '#start_of_string' do
+
+    it 'matches end of string'do
+      matcher = VerEx.new do
+        start_of_string
+        find 'abc'
+      end
+      matcher.match('abcdefg').should be_true
+      matcher.match('xxxabc').should be_false
+      matcher.match("abcdefg\nxxx").should be_true
+      matcher.match("xxx\nabcdefg").should be_false
+    end
+  end
+
+  describe '#end_of_string' do
+
+    it 'matches end of string' do
+      matcher = VerEx.new do
+        find 'abc'
+        end_of_string
+      end
+      matcher.match('xxxabc').should be_true
+      matcher.match('abcxxx').should be_false
+      matcher.match("xxxabc\nxxx").should be_false
+      matcher.match("xxx\nxxxabc").should be_true
+    end
+  end
+
+  describe '#hex' do
+
+    it 'matches a-f, A-F and 0-9' do
+      matcher = VerEx.new do
+        start_of_string
+        one_or_more { hex }
+        end_of_string
+      end
+      matcher.match('123abc').should be_true
+      matcher.match('FFFFFF').should be_true
+      matcher.match('abcdefg').should be_false
     end
   end
 
@@ -378,6 +446,90 @@ describe VerEx do
 
     it 'fails to match with htp:// is malformed' do
       matcher.match('htp://google.com').should be_false
+    end
+  end
+
+  describe 'modifiers' do
+    # I.e. Case insensitive, or multiline regex
+
+    it 'uses no modifiers by default' do
+      matcher = VerEx.new do
+        find "a"
+        anything
+        find "b"
+      end
+      matcher.match("axxxb").should be_true
+      matcher.match("AxxxB").should be_false
+      matcher.match("a\nb").should be_false
+    end
+
+    it 'works with ignorecase' do
+      matcher = VerEx.new(:ignorecase) do
+        find "a"
+        anything
+        find "b"
+      end
+      matcher.match("axxxb").should be_true
+      matcher.match("AxxxB").should be_true
+      matcher.match("a\nb").should be_false
+    end
+
+    it 'works with multiline' do
+      matcher = VerEx.new(:multiline) do
+        find "a"
+        anything
+        find "b"
+      end
+      matcher.match("axxxb").should be_true
+      matcher.match("AxxxB").should be_false
+      matcher.match("a\nb").should be_true
+    end
+
+    it 'works with ignorecase and multiline' do
+      matcher = VerEx.new(:ignorecase, :multiline) do
+        find "a"
+        anything
+        find "b"
+      end
+      matcher.match("axxxb").should be_true
+      matcher.match("AxxxB").should be_true
+      matcher.match("a\nb").should be_true
+    end
+  end
+
+  describe 'whole line or string' do
+
+    it 'does not need to match the whole line by default' do
+      matcher = VerEx.new do
+        find "abc"
+      end
+      matcher.match("abc").should be_true
+      matcher.match("abcxx").should be_true
+      matcher.match("xxabc").should be_true
+      matcher.match("abc\nxx").should be_true
+      matcher.match("xx\nabc").should be_true
+    end
+
+    it 'only matches a whole line when enabled' do
+      matcher = VerEx.new(:whole_line) do
+        find "abc"
+      end
+      matcher.match("abc").should be_true
+      matcher.match("abcxx").should be_false
+      matcher.match("xxabc").should be_false
+      matcher.match("abc\nxx").should be_true
+      matcher.match("xx\nabc").should be_true
+    end
+
+    it 'only matches a whole string when enabled' do
+      matcher = VerEx.new(:whole_string) do
+        find "abc"
+      end
+      matcher.match("abc").should be_true
+      matcher.match("abcxx").should be_false
+      matcher.match("xxabc").should be_false
+      matcher.match("abc\nxx").should be_false
+      matcher.match("xx\nabc").should be_false
     end
   end
 end
