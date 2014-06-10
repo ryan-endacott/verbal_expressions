@@ -496,4 +496,40 @@ describe VerEx do
       matcher.match("a\nb").should be_true
     end
   end
+
+  describe 'whole line or string' do
+
+    it 'does not need to match the whole line by default' do
+      matcher = VerEx.new do
+        find "abc"
+      end
+      matcher.match("abc").should be_true
+      matcher.match("abcxx").should be_true
+      matcher.match("xxabc").should be_true
+      matcher.match("abc\nxx").should be_true
+      matcher.match("xx\nabc").should be_true
+    end
+
+    it 'only matches a whole line when enabled' do
+      matcher = VerEx.new(:whole_line) do
+        find "abc"
+      end
+      matcher.match("abc").should be_true
+      matcher.match("abcxx").should be_false
+      matcher.match("xxabc").should be_false
+      matcher.match("abc\nxx").should be_true
+      matcher.match("xx\nabc").should be_true
+    end
+
+    it 'only matches a whole string when enabled' do
+      matcher = VerEx.new(:whole_string) do
+        find "abc"
+      end
+      matcher.match("abc").should be_true
+      matcher.match("abcxx").should be_false
+      matcher.match("xxabc").should be_false
+      matcher.match("abc\nxx").should be_false
+      matcher.match("xx\nabc").should be_false
+    end
+  end
 end

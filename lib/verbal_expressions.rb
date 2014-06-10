@@ -7,11 +7,18 @@ class VerEx < Regexp
 
   def initialize(*args, &block)
     @prefixes = ""
-    @source = ""
     @suffixes = ""
+    if args.include? :whole_string
+      @prefixes << '\A'
+      @suffixes << '\z'
+    elsif args.include? :whole_line
+      @prefixes << '^'
+      @suffixes << '$'
+    end
     modifiers = 0
     modifiers |= Regexp::IGNORECASE if args.include? :ignorecase
     modifiers |= Regexp::MULTILINE if args.include? :multiline
+    @source = ""
     @self_before_instance_eval = eval "self", block.binding
     instance_eval &block
     super(@prefixes + @source + @suffixes, modifiers)
