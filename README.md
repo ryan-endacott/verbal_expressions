@@ -88,7 +88,6 @@ Clone the repo and fork!
 Pull requests are warmly welcomed!
 
 ## Issues
- - I haven't yet ported the modifier code because Ruby Regexp handles modifiers a little differently.
  - Because `or` is reserved in Ruby, `or` is currently aliased to `alternatively`.  Unfortunately, `then` is also reserved, so you must use `find` instead.  I'm very open to better name ideas :)
 
 ## Thanks!
